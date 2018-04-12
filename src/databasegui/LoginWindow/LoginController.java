@@ -1,4 +1,4 @@
-package databasegui;
+package databasegui.LoginWindow;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -22,10 +22,9 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        Object newInstance;
-        newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Object newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/wzhang9db", username, password);// Please use your database name here
+            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/" + username + "db", username, password);// Please use your database name here
             PreparedStatement updateStaff;
             Statement queryStatement = connection.createStatement();
             updateStaff = null;
@@ -43,7 +42,7 @@ public class LoginController {
         }
 //        querys="UPDATE wzhang9db.EMPLOYEE SET salary = 8802 WHERE SSN = '123456789';";
 //        updateStaff = connection.prepareStatement(querys);
-
+        
     }
 
 }

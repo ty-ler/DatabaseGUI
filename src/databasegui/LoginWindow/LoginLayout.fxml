@@ -1,0 +1,16 @@
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<GridPane fx:controller="databasegui.LoginWindow.LoginController" xmlns:fx="http://javafx.com/fxml" alignment="center">
+
+    <Label text = "Username" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id= "usernameField" promptText="Username" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label alignment="CENTER_RIGHT" text = "Password" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <PasswordField fx:id="passwordField" promptText="Password" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <HBox fx:id="loginContainer" GridPane.rowSpan ="1" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Button fx:id="loginButton" onAction="#login" >Log in </Button>
+    </HBox>
+
+</GridPane>
