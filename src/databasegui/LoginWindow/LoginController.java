@@ -1,5 +1,6 @@
 package databasegui.LoginWindow;
 
+import databasegui.MainWindow.MainWindow;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -30,12 +31,8 @@ public class LoginController {
             updateStaff = null;
             String querys = "select * from EMPLOYEE;";
             ResultSet results = queryStatement.executeQuery(querys);
-            while (results.next()) {
-                System.out.print(results.getString("fName"));
-                System.out.print("    ");
-                System.out.print(results.getString("lName"));
-                System.out.println();
-            }
+
+            MainWindow.launchApp();
         }
         catch(Exception e){
             System.out.println("Wrong Input");

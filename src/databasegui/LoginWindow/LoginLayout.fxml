@@ -11,9 +11,9 @@
             <Image url="@blue-cross.png"></Image>
         </image>
     </ImageView>
-    <Label text = "Username" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Label text = "Username:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id= "usernameField" promptText="Username" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-    <Label text = "Password" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <Label text = "Password:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <PasswordField fx:id="passwordField" promptText="Password" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
     <HBox fx:id="loginContainer" GridPane.rowSpan ="2" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
