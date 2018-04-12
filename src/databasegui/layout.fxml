@@ -1,10 +1,15 @@
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 
-<?import javafx.scene.control.TextField?>
-<GridPane fx:controller="databasegui.LoginController" xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
-    <TextField></TextField>
+<GridPane fx:controller="databasegui.LoginController" xmlns:fx="http://javafx.com/fxml" alignment="center">
+
+    <Label text = "Username" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id= "usernameField" promptText="Username" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <Label text = "Password" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <PasswordField fx:id = "passwordField" promptText="Password" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <HBox GridPane.rowSpan ="1" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="2" >
+        <Button onAction="#login" >Log in </Button>
+    </HBox>
+
 </GridPane>
