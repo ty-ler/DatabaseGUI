@@ -29,6 +29,10 @@ public class MainWindowController implements Initializable {
             while (columnResults.next()) {
                 String columnName = columnResults.getString("COLUMN_NAME");
                 System.out.println(columnName);
+                while (results.next()){
+                    System.out.println(results.getString(columnName));
+                }
+                results.beforeFirst();
                 table.getColumns().add(new TableColumn<String, String>(columnName));
             }
 
