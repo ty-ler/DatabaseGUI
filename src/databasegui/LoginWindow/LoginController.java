@@ -4,6 +4,7 @@ import databasegui.MainWindow.MainWindow;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,6 +21,8 @@ public class LoginController implements Initializable{
 
     @FXML
     Button loginButton;
+    @FXML
+    Label msg;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -66,7 +69,7 @@ public class LoginController implements Initializable{
             mainWindow.launch();
         }
         catch(Exception e){
-            System.out.println(e);
+            msg.setText("Invalid login/password");
         }
 //        querys="UPDATE wzhang9db.EMPLOYEE SET salary = 8802 WHERE SSN = '123456789';";
 //        updateStaff = connection.prepareStatement(querys);

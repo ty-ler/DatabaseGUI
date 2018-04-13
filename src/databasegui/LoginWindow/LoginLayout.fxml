@@ -19,5 +19,6 @@
     <HBox fx:id="loginContainer" GridPane.rowSpan ="2" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
         <Button fx:id="loginButton" onAction="#login" >Log in </Button>
     </HBox>
+    <Label fx:id="msg" GridPane.columnIndex="1" GridPane.rowIndex="6"></Label>
 
 </GridPane>
