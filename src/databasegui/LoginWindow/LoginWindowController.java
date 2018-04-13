@@ -1,5 +1,6 @@
 package databasegui.LoginWindow;
 
+import com.mysql.jdbc.CommunicationsException;
 import databasegui.MainWindow.MainWindow;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +16,10 @@ import java.security.Key;
 import java.sql.*;
 import java.util.ResourceBundle;
 
-public class LoginController implements Initializable{
+public class LoginWindowController implements Initializable{
+
+    public MainWindow mainWindow = new MainWindow();
+
     @FXML
     TextField usernameField,passwordField;
 
@@ -26,8 +30,19 @@ public class LoginController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        usernameField.setOnAction(event -> {
 
+        try{
+            mainWindow.launch();
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
+        usernameField.setOnAction(event -> {
+            login();
+        });
+
+        passwordField.setOnAction(event -> {
+            login();
         });
 
         usernameField.addEventFilter(KeyEvent.KEY_PRESSED, (KeyEvent event) -> {
@@ -44,35 +59,29 @@ public class LoginController implements Initializable{
     }
 
     @FXML
-    public void loginAction(javafx.event.ActionEvent event) throws Exception{
+    public void loginAction(javafx.event.ActionEvent event) {
         login();
     }
 
-    public void login() throws Exception{
+    public void login(){
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        Object newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();
         try {
+            Object newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();
             Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/" + username + "db", username, password);// Please use your database name here
-            PreparedStatement updateStaff;
-            Statement queryStatement = connection.createStatement();
-            updateStaff = null;
-            String querys = "select * from EMPLOYEE;";
-            ResultSet results = queryStatement.executeQuery(querys);
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
 
             stage.close();
 
-            MainWindow mainWindow = new MainWindow();
             mainWindow.launch();
         }
-        catch(Exception e){
-            msg.setText("Invalid login/password");
+        catch(SQLException e){
+            System.out.println(e);
+            msg.setText("Invalid username/password");
+        } catch(Exception e){
+            System.out.println(e);
         }
-//        querys="UPDATE wzhang9db.EMPLOYEE SET salary = 8802 WHERE SSN = '123456789';";
-//        updateStaff = connection.prepareStatement(querys);
     }
-
 }

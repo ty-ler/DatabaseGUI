@@ -10,9 +10,9 @@ public class MainWindow {
     public Stage stage = new Stage();
 
     public void launch() throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("MainLayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("MainWindowLayout.fxml"));
         stage.setTitle("BlueCross BlueShield");
-        Scene scene = new Scene(root, 500, 450);
+        Scene scene = new Scene(root, 800, 600);
         //scene.getStylesheets().add("databasegui/LoginWindow/LoginWindow.css");
         stage.setScene(scene);
         stage.show();

@@ -1,14 +1,12 @@
-
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<GridPane fx:controller="databasegui.LoginWindow.LoginController" xmlns:fx="http://javafx.com/fxml" alignment="center" vgap="10" hgap="10">
+<GridPane fx:controller="databasegui.LoginWindow.LoginWindowController" xmlns:fx="http://javafx.com/fxml" alignment="center" vgap="10" hgap="10" translateX="-20">
 
-    <ImageView GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" fitHeight="100" fitWidth="100" >
+    <ImageView GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" fitHeight="150" fitWidth="150">
         <image>
-            <Image url="@blue-cross.png"></Image>
+            <Image url="@blue-cross.png"/>
         </image>
     </ImageView>
     <Label text = "Username:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
@@ -17,8 +15,8 @@
     <PasswordField fx:id="passwordField" promptText="Password" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
     <HBox fx:id="loginContainer" GridPane.rowSpan ="2" alignment="bottom_right" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button fx:id="loginButton" onAction="#login" >Log in </Button>
+        <Button fx:id="loginButton" onAction="#loginAction" >Log in </Button>
     </HBox>
-    <Label fx:id="msg" GridPane.columnIndex="1" GridPane.rowIndex="6"></Label>
+    <Label fx:id="msg" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
 </GridPane>

@@ -10,8 +10,9 @@ public class LoginWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("LoginLayout.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("LoginWindowLayout.fxml"));
         primaryStage.setTitle("BlueCross BlueShield");
+        primaryStage.setResizable(false);
         Scene scene = new Scene(root, 500, 450);
         scene.getStylesheets().add("databasegui/LoginWindow/LoginWindow.css");
         primaryStage.setScene(scene);

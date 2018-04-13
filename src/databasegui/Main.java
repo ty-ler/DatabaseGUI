@@ -5,6 +5,5 @@ import databasegui.MainWindow.MainWindow;
 
 public class Main {
 
-    public static void main(String[] args) { LoginWindow.launchApp();
-    }
+    public static void main(String[] args) { LoginWindow.launchApp(); }
 }
