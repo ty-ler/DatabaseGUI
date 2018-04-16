@@ -18,6 +18,9 @@ import java.util.ResourceBundle;
 
 public class LoginWindowController implements Initializable{
 
+    public static String username;
+    public static String password;
+
     public MainWindow mainWindow = new MainWindow();
 
     @FXML
@@ -64,8 +67,8 @@ public class LoginWindowController implements Initializable{
     }
 
     public void login(){
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        username = usernameField.getText();
+        password = passwordField.getText();
 
         try {
             Object newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();

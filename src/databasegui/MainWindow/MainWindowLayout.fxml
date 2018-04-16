@@ -3,6 +3,15 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.control.TableView?>
-<GridPane fx:controller="databasegui.MainWindow.MainWindowController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" alignment="center">
-    <TableView fx:id="table" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<GridPane fx:controller="databasegui.MainWindow.MainWindowController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
+    <HBox GridPane.hgrow="ALWAYS" spacing="5">
+        <ComboBox fx:id="dropdown"></ComboBox>
+        <Button text="Insert New Row" onAction="#insertNewRow"></Button>
+        <Button text="Delete Row" onAction="#deleteRow"></Button>
+    </HBox>
+
+    <TableView fx:id="table" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
 </GridPane>
