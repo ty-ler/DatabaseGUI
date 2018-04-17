@@ -1,7 +1,8 @@
 package databasegui.MainWindow;
 
 import com.mysql.jdbc.MysqlDataTruncation;
-import databasegui.AddEmpWindow.AddEmpWindow;
+import com.sun.tools.corba.se.idl.ExceptionEntry;
+import databasegui.AddWindow.AddWindow;
 import databasegui.LoginWindow.LoginWindowController;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -23,17 +25,21 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
     private String url;
-    private String username = "wzhang9";
-    private String password = "Cosc*wctm";
-    private String selectedTable;
+    private String username;
+    private String password;
+    public static String selectedTable;
     private String autoIncrementColumn;
     private ResultSet columnInfo;
     private ResultSet tables;
+    private ResultSet results;
+
+    private AddWindow addWindow = new AddWindow();
 
     @FXML
     TableView table;
@@ -43,9 +49,16 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-//        username = LoginWindowController.username;
-//        password = LoginWindowController.password;
-        url = "jdbc:mysql://triton.towson.edu:3360/" + username + "db";
+        username = LoginWindowController.username;
+        password = LoginWindowController.password;
+        url = LoginWindowController.url;
+
+        table.setColumnResizePolicy(new Callback<TableView.ResizeFeatures, Boolean>() {
+            @Override
+            public Boolean call(TableView.ResizeFeatures p) {
+                return true;
+            }
+        });
 
         table.setEditable(true);
         try{
@@ -82,34 +95,41 @@ public class MainWindowController implements Initializable {
 
     @FXML
     public void insertNewRow(){
-        AddEmpWindow addEmpWindow = new AddEmpWindow();
         try{
-            addEmpWindow.launch();
+            addWindow.launch();
+            addWindow.stage.setOnHiding(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    refreshTableData();
+                }
+            });
         } catch (Exception e){
             System.out.println(e);
         }
-
-//        try{
-//            Connection con = DriverManager.getConnection(url, username, password);
-//            con.prepareStatement("INSERT INTO `" + selectedTable + "` (`" + autoIncrementColumn+ "`) VALUES (NULL);").executeUpdate();
-//            con.close();
-//            refreshTableData();
-//        } catch (Exception e){
-//            System.out.println(e);
-//        }
-
     }
 
     @FXML
     public void deleteRow(){
-        int rowIndex = table.getSelectionModel().getFocusedIndex();
-        System.out.println(table.getItems().get(rowIndex));
+        String row = table.getSelectionModel().getSelectedItem().toString();
+        row = row.replace("[", "");
+        row = row.replace("]", "");
+        System.out.println(row);
+        String[] rowValues = row.split(",");
+
+        try{
+            Connection con = DriverManager.getConnection(LoginWindowController.url, LoginWindowController.username, LoginWindowController.password);
+            con.prepareStatement("DELETE FROM " + MainWindowController.selectedTable + " WHERE `" + autoIncrementColumn + "` = '" + rowValues[0] + "';").executeUpdate();
+            con.close();
+            refreshTableData();
+        } catch (Exception e){
+
+        }
     }
 
     public void refreshTable(){
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
-            ResultSet results = connection.createStatement().executeQuery("select * from " + selectedTable);
+            results = connection.createStatement().executeQuery("select * from " + selectedTable);
             columnInfo = connection.createStatement().executeQuery("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_KEY, EXTRA \n" +
                     "FROM INFORMATION_SCHEMA.COLUMNS \n" +
                     "WHERE TABLE_NAME = '" + selectedTable + "';");
@@ -118,7 +138,6 @@ public class MainWindowController implements Initializable {
                 final int j = i;
                 String columnName = results.getMetaData().getColumnName(i + 1);
                 TableColumn col = new TableColumn(columnName);
-                System.out.println(columnInfo.getString("COLUMN_KEY"));
                 if (columnInfo.getString("EXTRA").equals("auto_increment")) {
                     autoIncrementColumn = columnName;
                     col.setEditable(false);
@@ -131,7 +150,6 @@ public class MainWindowController implements Initializable {
                     col.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
                     col.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<ObservableList, Number>, ObservableValue<Number>>() {
                         public ObservableValue<Number> call(TableColumn.CellDataFeatures<ObservableList, Number> param) {
-                            System.out.println(param.getValue().get(j).toString());
                             return new SimpleIntegerProperty(Integer.parseInt(param.getValue().get(j).toString()));
                         }
                     });
@@ -149,7 +167,6 @@ public class MainWindowController implements Initializable {
                     public void handle(TableColumn.CellEditEvent event) {
                         String columnName = event.getTablePosition().getTableColumn().getText();
                         String query = "UPDATE " + selectedTable + " SET " + columnName + "='" + event.getNewValue() + "' WHERE " + columnName + "='" + event.getOldValue() + "';";
-                        System.out.println(event.getTablePosition().getRow());
                         System.out.println(query);
                         try {
                             Connection con = DriverManager.getConnection(url, username, password);
@@ -182,9 +199,8 @@ public class MainWindowController implements Initializable {
         ObservableList<ObservableList> data = FXCollections.observableArrayList();
         try{
             Connection con = DriverManager.getConnection(url, username, password);
-            ResultSet results = con.createStatement().executeQuery("select * from " + selectedTable);
+            results = con.createStatement().executeQuery("select * from " + selectedTable);
             while(results.next()){
-                columnInfo.next();
                 ObservableList row = FXCollections.observableArrayList();
                 for(int i = 0; i < results.getMetaData().getColumnCount(); i++){
                     if(results.getString(i+1) != null){
@@ -195,7 +211,7 @@ public class MainWindowController implements Initializable {
                 }
                 data.add(row);
             }
-            columnInfo.beforeFirst();
+            results.beforeFirst();
             con.close();
             table.setItems(data);
             table.refresh();

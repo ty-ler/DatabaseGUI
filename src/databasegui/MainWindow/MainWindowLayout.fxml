@@ -5,8 +5,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<GridPane fx:controller="databasegui.MainWindow.MainWindowController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
-    <HBox GridPane.hgrow="ALWAYS" spacing="5">
+<?import javafx.scene.control.Label?>
+<GridPane fx:controller="databasegui.MainWindow.MainWindowController" xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" vgap="10">
+    <HBox GridPane.hgrow="ALWAYS" spacing="5" translateY="5" translateX="5" alignment="CENTER_LEFT">
+        <Label text="Table:"></Label>
         <ComboBox fx:id="dropdown"></ComboBox>
         <Button text="Insert New Row" onAction="#insertNewRow"></Button>
         <Button text="Delete Row" onAction="#deleteRow"></Button>

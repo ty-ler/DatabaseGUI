@@ -18,8 +18,9 @@ import java.util.ResourceBundle;
 
 public class LoginWindowController implements Initializable{
 
-    public static String username;
-    public static String password;
+    public static String url;
+    public static String username = "wzhang9";
+    public static String password = "Cosc*wctm";
 
     public MainWindow mainWindow = new MainWindow();
 
@@ -34,6 +35,7 @@ public class LoginWindowController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        url = "jdbc:mysql://triton.towson.edu:3360/" + username + "db";
         try{
             mainWindow.launch();
         } catch (Exception e){
@@ -67,12 +69,12 @@ public class LoginWindowController implements Initializable{
     }
 
     public void login(){
-        username = usernameField.getText();
-        password = passwordField.getText();
-
+//        username = usernameField.getText();
+//        password = passwordField.getText();
+        url = "jdbc:mysql://triton.towson.edu:3360/" + username + "db";
         try {
             Object newInstance = Class.forName("com.mysql.jdbc.Driver").newInstance();
-            Connection connection = DriverManager.getConnection("jdbc:mysql://triton.towson.edu:3360/" + username + "db", username, password);// Please use your database name here
+            Connection connection = DriverManager.getConnection(url, username, password);// Please use your database name here
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
 
