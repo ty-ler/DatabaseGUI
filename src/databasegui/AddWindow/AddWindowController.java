@@ -17,11 +17,14 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 
@@ -40,6 +43,8 @@ public class AddWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Border normalBorder = new Border(new BorderStroke(Color.BLUE, BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+        Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
         System.out.println(grid.getScene());
         try{
             con = DriverManager.getConnection(LoginWindowController.url, LoginWindowController.username, LoginWindowController.password);
@@ -57,9 +62,9 @@ public class AddWindowController implements Initializable {
             Label label = new Label(columns.get(i) + ":");
             grid.add(label, 0, i);
             try{
-                if(results.getMetaData().getColumnType(i+1) == Types.DATE){
+                int columnType = results.getMetaData().getColumnType(i+1);
+                if(columnType == Types.DATE){
                     DatePicker datePicker = new DatePicker();
-                    datePicker.setEditable(false);
                     datePicker.setConverter(new StringConverter<LocalDate>() {
                         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -81,12 +86,29 @@ public class AddWindowController implements Initializable {
                             }
                         }
                     });
-
+                    Tooltip tooltip = new Tooltip(jdbcMappings.get(columnType));
+                    datePicker.setTooltip(tooltip);
+                    datePicker.setBorder(normalBorder);
+                    datePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+                        @Override
+                        public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+                            datePicker.setBorder(normalBorder);
+                        }
+                    });
                     textFields.add(datePicker);
                     grid.add(datePicker, 1, i);
 
                 } else {
                     TextField textField = new TextField();
+                    Tooltip tooltip = new Tooltip(jdbcMappings.get(columnType));
+                    textField.setTooltip(tooltip);
+                    textField.setBorder(normalBorder);
+                    textField.textProperty().addListener(new ChangeListener<String>() {
+                        @Override
+                        public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                            textField.setBorder(normalBorder);
+                        }
+                    });
                     textFields.add(textField);
 
                     grid.add(textField, 1, i);
@@ -178,5 +200,22 @@ public class AddWindowController implements Initializable {
         }
         Stage stage = (Stage) grid.getScene().getWindow();
         stage.close();
+    }
+
+
+//    https://stackoverflow.com/questions/6437790/jdbc-get-the-sql-type-name-from-java-sql-type-code
+    public Map<Integer, String> getAllJdbcTypeNames() {
+
+        Map<Integer, String> result = new HashMap<Integer, String>();
+
+        for (Field field : Types.class.getFields()) {
+            try{
+                result.put((Integer)field.get(null), field.getName());
+            } catch (Exception e){
+                System.out.println(e);
+            }
+        }
+
+        return result;
     }
 }
