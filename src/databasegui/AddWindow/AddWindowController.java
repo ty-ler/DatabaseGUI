@@ -59,9 +59,9 @@ public class AddWindowController implements Initializable {
         }
 
         for(int i = 0; i < columns.size(); i++) {
-            Label label = new Label(columns.get(i) + ":");
-            grid.add(label, 0, i);
             try{
+                Label label = new Label(columns.get(i) + ":");
+                grid.add(label, 0, i);
                 int columnType = results.getMetaData().getColumnType(i+1);
                 if(columnType == Types.DATE){
                     DatePicker datePicker = new DatePicker();
@@ -122,6 +122,8 @@ public class AddWindowController implements Initializable {
         hBox.setSpacing(5);
         Button cancelButton = new Button("Cancel");
         Button confirmButton = new Button("Confirm");
+        cancelButton.getStyleClass().add("cancelButton");
+        confirmButton.getStyleClass().add("confirmButton");
         cancelButton.setOnAction(event -> {
             cancel();
         });
@@ -152,8 +154,12 @@ public class AddWindowController implements Initializable {
             for(int i = 0; i < columns.size(); i++){
                 if(textFields.get(i) instanceof TextField){
                     TextField textField = (TextField) textFields.get(i);
-
+//                    if(results.getMetaData().isAutoIncrement(i+1)){
+//                        statement.setString(i, );
+//                        continue;
+//                    }
                     if(!textField.getText().isEmpty()){
+                        System.out.println(i);
                         if(results.getMetaData().getColumnType(i+1) == Types.INTEGER){
                             try{
                                 int input = Integer.parseInt(((TextField) textFields.get(i)).getText());
@@ -185,8 +191,8 @@ public class AddWindowController implements Initializable {
             con.close();
             stage.close();
         } catch (MysqlDataTruncation e) {
-            System.out.println();
-        } catch (Exception e) {
+            System.out.println(e);
+        } catch (SQLException e){
             System.out.println(e);
         }
     }

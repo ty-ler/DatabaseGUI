@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.prefs.Preferences;
+
 public class MainWindow {
     public Stage stage = new Stage();
 
@@ -13,7 +15,12 @@ public class MainWindow {
         Parent root = FXMLLoader.load(getClass().getResource("MainWindowLayout.fxml"));
         stage.setTitle("BlueCross BlueShield");
         Scene scene = new Scene(root, 1024, 720);
-        scene.getStylesheets().add("databasegui/MainWindow/MainWindow.css");
+        Preferences prefs = Preferences.userNodeForPackage(databasegui.Main.class);
+        if (prefs.get("dark_mode", "false").equals("false")) {
+            scene.getStylesheets().add("databasegui/MainWindow/MainWindow.css");
+        } else {
+            scene.getStylesheets().add("databasegui/MainWindow/MainWindowDark.css");
+        }
         stage.setScene(scene);
         stage.show();
     }

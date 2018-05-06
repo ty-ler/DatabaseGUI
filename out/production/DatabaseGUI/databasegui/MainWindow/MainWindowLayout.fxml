@@ -16,6 +16,7 @@
         <Button styleClass="insertButton" text="Insert New Row" onAction="#insertNewRow"></Button>
         <Button styleClass="deleteButton" text="Delete Row" onAction="#deleteRow"></Button>
         <HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" translateX="-20">
+            <TextField fx:id="search" promptText="Search..."></TextField>
             <Button fx:id="toggleTheme" onAction="#toggleTheme" text="Toggle Theme"></Button>
         </HBox>
     </HBox>

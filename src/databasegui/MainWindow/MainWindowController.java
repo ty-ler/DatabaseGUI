@@ -12,16 +12,12 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
-import javafx.util.converter.NumberStringConverter;
 
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -30,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 public class MainWindowController implements Initializable {
 
@@ -42,14 +39,22 @@ public class MainWindowController implements Initializable {
     private ResultSet tables;
     private ResultSet results;
     private ArrayList<String> columnTypes = new ArrayList<>();
+    private Boolean darkMode;
 
     private AddWindow addWindow = new AddWindow();
+    private Preferences prefs = Preferences.userNodeForPackage(databasegui.Main.class);
 
     @FXML
     TableView table;
 
     @FXML
     ComboBox dropdown;
+
+    @FXML
+    Button toggleTheme;
+
+    @FXML
+    TextField search;
 
     private Map<Integer, String> jdbcMappings = getAllJdbcTypeNames();
 
@@ -58,7 +63,6 @@ public class MainWindowController implements Initializable {
         username = LoginWindowController.username;
         password = LoginWindowController.password;
         url = LoginWindowController.url;
-
 
         table.setEditable(true);
         try{
@@ -84,8 +88,6 @@ public class MainWindowController implements Initializable {
             });
             refreshTable();
             connection.close();
-
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -108,19 +110,38 @@ public class MainWindowController implements Initializable {
 
     @FXML
     public void deleteRow(){
-        String row = table.getSelectionModel().getSelectedItem().toString();
-        row = row.replace("[", "");
-        row = row.replace("]", "");
-        System.out.println(row);
-        String[] rowValues = row.split(",");
+        if(table.getSelectionModel().getSelectedItem() != null) {
+            String row = table.getSelectionModel().getSelectedItem().toString();
+            row = row.replace("[", "");
+            row = row.replace("]", "");
+            System.out.println(row);
+            String[] rowValues = row.split(",");
 
-        try{
-            Connection con = DriverManager.getConnection(LoginWindowController.url, LoginWindowController.username, LoginWindowController.password);
-            con.prepareStatement("DELETE FROM " + MainWindowController.selectedTable + " WHERE `" + autoIncrementColumn + "` = '" + rowValues[0] + "';").executeUpdate();
-            con.close();
-            refreshTableData();
-        } catch (Exception e){
+            try{
+                Connection con = DriverManager.getConnection(LoginWindowController.url, LoginWindowController.username, LoginWindowController.password);
+                con.prepareStatement("DELETE FROM " + MainWindowController.selectedTable + " WHERE `" + autoIncrementColumn + "` = '" + rowValues[0] + "';").executeUpdate();
+                con.close();
+                refreshTableData();
+            } catch (Exception e){
 
+            }
+        }
+
+    }
+
+    @FXML
+    public void toggleTheme(){
+        Scene scene =  toggleTheme.getScene();
+        if(prefs.get("dark_mode", "false").equals("false")){
+            darkMode = true;
+            prefs.put("dark_mode", "true");
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("MainWindowDark.css").toExternalForm());
+        } else {
+            darkMode = false;
+            prefs.put("dark_mode", "false");
+            scene.getStylesheets().clear();
+            scene.getStylesheets().add(getClass().getResource("MainWindow.css").toExternalForm());
         }
     }
 
@@ -134,6 +155,7 @@ public class MainWindowController implements Initializable {
                     "WHERE TABLE_NAME = '" + selectedTable + "';");
             columnTypes.clear();
             for (int i = 0; i < results.getMetaData().getColumnCount(); i++) {
+                int columnWidth = results.getMetaData().getColumnCount();
                 columnInfo.next();
                 columnTypes.add(jdbcMappings.get(results.getMetaData().getColumnType(i+1)));
                 final int j = i;
@@ -189,6 +211,7 @@ public class MainWindowController implements Initializable {
                         }
                     }
                 });
+                col.prefWidthProperty().bind(table.widthProperty().divide(columnWidth));
                 table.getColumns().addAll(col);
             }
 

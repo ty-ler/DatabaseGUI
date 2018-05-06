@@ -1,13 +1,13 @@
 .root {
-    -fx-background-color: #FFFFFF;
-}
-
-GridPane {
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #282828;
 }
 
 .label {
-    -fx-text-fill: #282828;
+    -fx-text-fill: #fff;
+}
+
+GridPane {
+    -fx-background-color: #282828;
 }
 
 .confirmButton {
